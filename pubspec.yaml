@@ -1,0 +1,23 @@
+name: flutter_reddit_app
+description: Simple passive Reddit client
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.3.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  reddit:
+    git:
+      url: git://github.com/veikkos/dart-reddit.git
+      ref: fix-array-decode
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
