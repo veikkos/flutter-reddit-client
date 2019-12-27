@@ -110,19 +110,24 @@ class _RedditPageState extends State<RedditPage> {
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
+                if (index.isOdd) {
+                  return Divider();
+                }
                 return InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => CommentsWidget(
-                                _reddit,
-                                items[index].getSubreddit(),
-                                items[index].getId())),
+                        MaterialPageRoute(builder: (context) {
+                          var indexFixed = index ~/ 2;
+                          return CommentsWidget(
+                              _reddit,
+                              items[indexFixed].getSubreddit(),
+                              items[indexFixed].getId());
+                        }),
                       );
                     },
-                    child: items[index].renderable(context));
-              }, childCount: items.length),
+                    child: items[index ~/ 2].renderable(context));
+              }, childCount: (items.length * 2) - 1),
             ),
           ),
         ],
