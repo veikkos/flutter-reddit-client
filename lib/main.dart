@@ -89,6 +89,7 @@ class _RedditPageState extends State<RedditPage> {
               padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 0),
               child: Column(children: <Widget>[
                 TextField(
+                  controller: TextEditingController()..text = _subreddit,
                   style: new TextStyle(
                     fontSize: 24.0,
                   ),
