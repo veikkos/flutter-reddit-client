@@ -43,59 +43,88 @@ class RedditPage extends StatefulWidget {
 }
 
 class _RedditPageState extends State<RedditPage> {
-  _RedditPageState(this.reddit);
+  _RedditPageState(this._reddit);
 
-  Reddit reddit;
+  Reddit _reddit;
+  String _subreddit = 'all';
   List<PostItem> items = new List<PostItem>();
 
   void _refresh() {
-    reddit.frontPage.hot().limit(20).fetch().then((result) {
-      setState(() {
-        items = result['data']['children'].map<PostItem>((d) {
-          var data = d['data'];
-          return new PostItem(
-              data['id'],
-              data['title'],
-              data['subreddit'],
-              data['subreddit_name_prefixed'],
-              data['author_fullname'],
-              data['score'],
-              data['num_comments'],
-              data['likes'],
-              data['thumbnail'].toString().contains('http')
-                  ? data['thumbnail']
-                  : null);
-        }).toList();
+    if (_subreddit != null && _subreddit.isNotEmpty)
+      _reddit.sub(_subreddit).hot().limit(20).fetch().then((result) {
+        setState(() {
+          var data = result['data'];
+          if (data != null && data != '') {
+            items = data['children'].map<PostItem>((d) {
+              var data = d['data'];
+              return new PostItem(
+                  data['id'],
+                  data['title'],
+                  data['subreddit'],
+                  data['subreddit_name_prefixed'],
+                  data['author_fullname'],
+                  data['score'],
+                  data['num_comments'],
+                  data['likes'],
+                  data['thumbnail'].toString().contains('http')
+                      ? data['thumbnail']
+                      : null);
+            }).toList();
+          }
+        });
       });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CommentsWidget(reddit,
-                            items[index].getSubreddit(), items[index].getId())),
-                  );
-                },
-                child: items[index].renderable(context));
-          },
-          separatorBuilder: (context, index) {
-            return Divider();
-          },
-        ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text(widget.title),
+            floating: true,
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 0),
+              child: Column(children: <Widget>[
+                TextField(
+                  style: new TextStyle(
+                    fontSize: 24.0,
+                  ),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixText: 'r/',
+                      hintText: 'Input subreddit name'),
+                  onSubmitted: (text) {
+                    _subreddit = text;
+                    _refresh();
+                  },
+                ),
+                Divider(),
+              ]),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CommentsWidget(
+                                _reddit,
+                                items[index].getSubreddit(),
+                                items[index].getId())),
+                      );
+                    },
+                    child: items[index].renderable(context));
+              }, childCount: items.length),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _refresh,
