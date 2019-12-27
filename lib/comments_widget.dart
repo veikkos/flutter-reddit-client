@@ -29,6 +29,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   String _subredditPrefixed;
   String _url;
   List<Comment> _baseComments;
+  bool loading = true;
 
   _getContent() {
     if (_url.endsWith('.gif') || _url.endsWith('.jpg')) {
@@ -44,6 +45,54 @@ class _CommentsWidgetState extends State<CommentsWidget> {
     }
   }
 
+  List<Widget> _getView() {
+    return loading
+        ? [
+            SliverToBoxAdapter(
+                child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                  SizedBox(height: 100.0),
+                  CircularProgressIndicator()
+                ]))
+          ]
+        : [
+            SliverToBoxAdapter(
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      if (_subredditPrefixed != null)
+                        Text(_subredditPrefixed,
+                            style: Theme.of(context).textTheme.body2),
+                      if (_subredditPrefixed != null) SizedBox(height: 10.0),
+                      if (_title != null)
+                        Text(_title, style: Theme.of(context).textTheme.title),
+                      if (_text != null || _url != null) SizedBox(height: 10.0),
+                      if (_text != null)
+                        Text(_text, style: Theme.of(context).textTheme.body1),
+                      if (_url != null) _getContent(),
+                      Divider(),
+                      Text("Comments:",
+                          style: Theme.of(context).textTheme.subtitle),
+                    ]),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(10.0),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (context, index) =>
+                        _baseComments[index].renderable(context),
+                    childCount:
+                        _baseComments != null ? _baseComments.length : 0),
+              ),
+            )
+          ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,36 +102,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
             title: Text('Comments'),
             floating: true,
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    if (_subredditPrefixed != null)
-                      Text(_subredditPrefixed,
-                          style: Theme.of(context).textTheme.body2),
-                    if (_subredditPrefixed != null) SizedBox(height: 10.0),
-                    if (_title != null)
-                      Text(_title, style: Theme.of(context).textTheme.title),
-                    if (_text != null || _url != null) SizedBox(height: 10.0),
-                    if (_text != null)
-                      Text(_text, style: Theme.of(context).textTheme.body1),
-                    if (_url != null) _getContent(),
-                    Divider(),
-                    Text("Comments:",
-                        style: Theme.of(context).textTheme.subtitle),
-                  ]),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(10.0),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (context, index) => _baseComments[index].renderable(context),
-                  childCount: _baseComments != null ? _baseComments.length : 0),
-            ),
-          ),
+          ..._getView(),
         ],
       ),
     );
@@ -140,6 +160,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
     super.initState();
     _reddit.sub(_subreddit).comments(_id).fetch().then((result) {
       setState(() {
+        loading = false;
         var data = result['data'];
         var main = _parseMain(data[0]);
         _title = main['title'];
