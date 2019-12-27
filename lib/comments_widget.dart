@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:reddit/reddit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'comment_item.dart';
 
@@ -25,7 +27,22 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   String _title;
   String _text;
   String _subredditPrefixed;
+  String _url;
   List<Comment> _baseComments;
+
+  _getContent() {
+    if (_url.endsWith('.gif') || _url.endsWith('.jpg')) {
+      return Image.network(_url);
+    } else {
+      return Linkify(
+          text: _url,
+          onOpen: (LinkableElement link) {
+            if (canLaunch(link.url) != null) {
+              launch(link.url);
+            }
+          });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +65,10 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     if (_subredditPrefixed != null) SizedBox(height: 10.0),
                     if (_title != null)
                       Text(_title, style: Theme.of(context).textTheme.title),
-                    if (_text != null) SizedBox(height: 10.0),
+                    if (_text != null || _url != null) SizedBox(height: 10.0),
                     if (_text != null)
                       Text(_text, style: Theme.of(context).textTheme.body1),
+                    if (_url != null) _getContent(),
                     Divider(),
                     Text("Comments:",
                         style: Theme.of(context).textTheme.subtitle),
@@ -126,6 +144,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
         var main = _parseMain(data[0]);
         _title = main['title'];
         _text = main['selftext'];
+        _url = main['url'];
         _subredditPrefixed = main['subreddit_name_prefixed'];
         if (_text != null && _text == '') _text = null;
         _baseComments = _parseReplies(data[1]);
