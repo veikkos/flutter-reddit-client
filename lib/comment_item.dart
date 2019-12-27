@@ -33,29 +33,29 @@ class Comment {
 
   renderable(BuildContext context) {
     return Container(
+        margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-          if (author != null) _makeComment(context),
-          if (replies != null)
-            Container(
-              margin:
-                  const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0),
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.separated(
-                  itemBuilder: (context, index) =>
-                      replies[index].renderable(context),
-                  itemCount: replies.length,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  separatorBuilder: (context, index) {
-                    return Divider();
-                  },
-                ),
-              ),
-            )
-        ]));
+              if (author != null) _makeComment(context),
+              if (replies != null)
+                Container(
+                  margin: const EdgeInsets.only(left: 20.0),
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: ListView.separated(
+                      itemBuilder: (context, index) =>
+                          replies[index].renderable(context),
+                      itemCount: replies.length,
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
+                    ),
+                  ),
+                )
+            ]));
   }
 }
