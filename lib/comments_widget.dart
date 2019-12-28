@@ -82,7 +82,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
             ),
             SliverPadding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                  const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                     (context, index) =>
@@ -109,7 +109,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
     );
   }
 
-  static _parseMain(var input) {
+  static _parsePostInfo(var input) {
     if (input != null && input != '') {
       var highData = input['data'];
       if (highData != null) {
@@ -156,21 +156,25 @@ class _CommentsWidgetState extends State<CommentsWidget> {
     return comments;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  _fetchComments() {
     _reddit.sub(_subreddit).comments(_id).fetch().then((result) {
       setState(() {
         loading = false;
         var data = result['data'];
-        var main = _parseMain(data[0]);
-        _title = main['title'];
-        _text = main['selftext'];
-        _url = main['url'];
-        _subredditPrefixed = main['subreddit_name_prefixed'];
-        if (_text != null && _text == '') _text = null;
+        var postInfo = _parsePostInfo(data[0]);
+        _title = postInfo['title'];
+        _text = postInfo['selftext'];
+        _url = postInfo['url'];
+        _subredditPrefixed = postInfo['subreddit_name_prefixed'];
+        if (_text == '') _text = null;
         _baseComments = _parseReplies(data[1]);
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchComments();
   }
 }
