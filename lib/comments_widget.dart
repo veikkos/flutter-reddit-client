@@ -81,7 +81,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(10.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                     (context, index) =>
