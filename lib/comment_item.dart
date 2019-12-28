@@ -20,20 +20,21 @@ class Comment {
                 style: Theme.of(context).textTheme.caption.apply(
                       color: Colors.blue,
                     )),
-            SizedBox(width: 5.0),
+            SizedBox(width: 7.0),
             Text(
                 score != null
                     ? Formatter.uiCount(score) + ' points'
                     : 'Score hidden',
                 style: Theme.of(context).textTheme.caption),
           ]),
+          SizedBox(height: 2.0),
           Text(text),
         ]);
   }
 
   renderable(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+        margin: const EdgeInsets.only(top: 10.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
