@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/post_item.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:reddit/reddit.dart';
 
 import 'comments_widget.dart';
@@ -38,15 +41,15 @@ class _RedditPageState extends State<RedditPage> {
 
   Reddit _reddit;
   String _subreddit = 'all';
-  List<PostItem> items = new List<PostItem>();
+  List<PostItem> _items = new List<PostItem>();
 
-  void _refresh() {
+  _refreshPosts() {
     if (_subreddit != null && _subreddit.isNotEmpty)
       _reddit.sub(_subreddit).hot().limit(20).fetch().then((result) {
         setState(() {
           var data = result['data'];
           if (data != null && data != '') {
-            items = data['children'].map<PostItem>((d) {
+            _items = data['children'].map<PostItem>((d) {
               var data = d['data'];
               return new PostItem(
                   data['id'],
@@ -66,6 +69,34 @@ class _RedditPageState extends State<RedditPage> {
       });
   }
 
+  _getSubredditList(String pattern) async {
+    var completer = new Completer<List<String>>();
+    _reddit.popularSubreddits().fetch().then((result) {
+      var data = result['data'];
+      if (data != null) {
+        var children = data['children'];
+        if (children != null) {
+          var list = children
+              .map<String>((item) => item['data']['display_name'].toString())
+              .toList();
+          list.sort();
+          return completer.complete(list.where((sub) {
+            return sub.toLowerCase().contains(pattern.toLowerCase()) == true;
+          }).toList());
+        }
+      }
+
+      return completer.complete(List<String>());
+    });
+
+    return completer.future;
+  }
+
+  _updateSubreddit(String subreddit) {
+    _subreddit = subreddit;
+    _refreshPosts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,22 +107,34 @@ class _RedditPageState extends State<RedditPage> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 0),
+              padding: const EdgeInsets.only(top: 10.0, left: 20.0),
               child: Column(children: <Widget>[
-                TextField(
-                  controller: TextEditingController()..text = _subreddit,
-                  style: new TextStyle(
-                    fontSize: 24.0,
-                  ),
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixText: 'r/',
-                      hintText: 'type subreddit (e.g. "all")'),
-                  onSubmitted: (text) {
-                    _subreddit = text;
-                    _refresh();
-                  },
-                ),
+                TypeAheadField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: TextEditingController()..text = _subreddit,
+                      style: new TextStyle(
+                        fontSize: 24.0,
+                      ),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          prefixText: 'r/',
+                          hintText: 'type subreddit (e.g. "all")'),
+                      onSubmitted: (text) {
+                        _updateSubreddit(text);
+                      },
+                    ),
+                    suggestionsCallback: (pattern) async {
+                      return await _getSubredditList(pattern);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      _updateSubreddit(suggestion);
+                    },
+                    noItemsFoundBuilder: (BuildContext context) => null),
                 Divider(),
               ]),
             ),
@@ -111,19 +154,19 @@ class _RedditPageState extends State<RedditPage> {
                           var indexFixed = index ~/ 2;
                           return CommentsWidget(
                               _reddit,
-                              items[indexFixed].getSubreddit(),
-                              items[indexFixed].getId());
+                              _items[indexFixed].getSubreddit(),
+                              _items[indexFixed].getId());
                         }),
                       );
                     },
-                    child: items[index ~/ 2].renderable(context));
-              }, childCount: (items.length * 2) - 1),
+                    child: _items[index ~/ 2].renderable(context));
+              }, childCount: (_items.length * 2) - 1),
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _refresh,
+        onPressed: _refreshPosts,
         tooltip: 'Refresh',
         child: Icon(Icons.refresh),
       ),
@@ -133,6 +176,6 @@ class _RedditPageState extends State<RedditPage> {
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _refreshPosts();
   }
 }
