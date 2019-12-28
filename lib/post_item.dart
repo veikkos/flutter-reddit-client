@@ -33,8 +33,10 @@ class PostItem {
           ),
           SizedBox(width: 10),
           Text(
-            'u/' + user,
-            style: Theme.of(context).textTheme.body1,
+            'Posted by u/' + user,
+            style: Theme.of(context).textTheme.body1.apply(
+                  color: Colors.black54,
+                ),
           ),
         ]),
         Column(children: <Widget>[
