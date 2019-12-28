@@ -140,8 +140,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
               String author = data['author'];
               if (body != null && author != null) {
                 if (comments == null) comments = new List<Comment>();
-                Comment comment = new Comment(
-                    body, author, data['score_hidden'] ? null : data['score']);
+                Comment comment = new Comment(body, author, data['author_flair_text'],
+                    data['score_hidden'] ? null : data['score']);
                 var replies = data['replies'];
                 if (replies != null) {
                   comment.replies = _parseReplies(replies);
