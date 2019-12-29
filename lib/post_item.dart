@@ -15,9 +15,19 @@ class PostItem {
   final int comments;
   final String url;
   final String thumbnailUrl;
+  final bool locked;
 
-  PostItem(this.id, this.title, this.subreddit, this.subredditPrefixed,
-      this.user, this.score, this.comments, this.url, this.thumbnailUrl);
+  PostItem(
+      this.id,
+      this.title,
+      this.subreddit,
+      this.subredditPrefixed,
+      this.user,
+      this.score,
+      this.comments,
+      this.url,
+      this.thumbnailUrl,
+      this.locked);
 
   getId() => id;
 
@@ -61,6 +71,12 @@ class PostItem {
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             Container(
                 child: Row(children: <Widget>[
+              if (locked)
+                Icon(
+                  Icons.lock_outline,
+                  color: Colors.yellow[600],
+                ),
+              if (locked) SizedBox(width: 2),
               Transform.rotate(
                 angle: -pi / 2,
                 child: Icon(
