@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 import 'formatter.dart';
 
@@ -45,7 +46,7 @@ class Comment {
                     .apply(color: Colors.black38)),
           ]),
           SizedBox(height: 2.0),
-          Text(text),
+          Text(new HtmlUnescape().convert(text)),
         ]);
   }
 
