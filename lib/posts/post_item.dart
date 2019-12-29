@@ -39,7 +39,7 @@ class PostItem {
         getPostHeader(context, subredditPrefixed, author),
         Column(children: <Widget>[
           Container(
-            margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+            margin: const EdgeInsets.symmetric(vertical: 10.0),
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
