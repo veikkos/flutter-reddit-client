@@ -16,6 +16,7 @@ class PostItem {
   final String url;
   final String thumbnailUrl;
   final bool locked;
+  final bool stickied;
 
   PostItem(
       this.id,
@@ -27,7 +28,8 @@ class PostItem {
       this.comments,
       this.url,
       this.thumbnailUrl,
-      this.locked);
+      this.locked,
+      this.stickied);
 
   getId() => id;
 
@@ -71,6 +73,12 @@ class PostItem {
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             Container(
                 child: Row(children: <Widget>[
+              if (stickied)
+                Icon(
+                  Icons.bookmark,
+                  color: Colors.lightGreen,
+                ),
+              if (stickied) SizedBox(width: 6),
               if (locked)
                 Icon(
                   Icons.lock_outline,

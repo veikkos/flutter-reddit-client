@@ -63,7 +63,8 @@ class _RedditPageState extends State<RedditPage> {
                   data['thumbnail'].toString().contains('http')
                       ? data['thumbnail']
                       : null,
-                  data['locked']);
+                  data['locked'],
+                  data['stickied']);
             }).toList();
           }
         });
