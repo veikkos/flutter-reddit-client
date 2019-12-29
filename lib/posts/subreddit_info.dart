@@ -5,6 +5,4 @@ class SubredditInfo {
   String title;
   String headerImg;
   String icon;
-
-  get hasImages => headerImg != null && icon != null;
 }

@@ -85,6 +85,7 @@ class _RedditPageState extends State<RedditPage> {
           setState(() {
             var bannerImg = data['banner_img'];
             var bannerBackgroundImage = data['banner_background_image'];
+            var iconImg = data['icon_img'];
             _subreddit = SubredditInfo(_subreddit.name,
                 title: data['title'],
                 headerImg: bannerImg != null && bannerImg != ''
@@ -92,7 +93,7 @@ class _RedditPageState extends State<RedditPage> {
                     : bannerBackgroundImage != ''
                         ? bannerBackgroundImage
                         : null,
-                icon: data['icon_img']);
+                icon: iconImg != null && iconImg != '' ? iconImg : null);
           });
         }
       });
@@ -136,9 +137,10 @@ class _RedditPageState extends State<RedditPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            title: _subreddit.hasImages ? null : Text(widget.title),
-            expandedHeight: _subreddit.hasImages ? 130.0 : 0,
-            flexibleSpace: _subreddit.hasImages
+            backgroundColor: _subreddit.icon != null ? Colors.black : null,
+            title: _subreddit.icon != null ? null : Text(widget.title),
+            expandedHeight: _subreddit.icon != null ? 130.0 : 0,
+            flexibleSpace: _subreddit.icon != null
                 ? FlexibleSpaceBar(
                     centerTitle: true,
                     title: _subreddit.icon != null
@@ -153,10 +155,15 @@ class _RedditPageState extends State<RedditPage> {
                                 backgroundImage: NetworkImage(_subreddit.icon)),
                           )
                         : Text(_subreddit.title),
-                    background: Image.network(
-                      _subreddit.headerImg,
-                      fit: BoxFit.cover,
-                    ))
+                    background: _subreddit.headerImg != null
+                        ? Opacity(
+                            opacity: 0.7,
+                            child: Image.network(
+                              _subreddit.headerImg,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : null)
                 : null,
           ),
           SliverToBoxAdapter(
