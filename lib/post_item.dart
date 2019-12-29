@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_reddit_app/post_util.dart';
 
 import 'formatter.dart';
 
@@ -10,7 +11,7 @@ class PostItem {
   final String title;
   final String subreddit;
   final String subredditPrefixed;
-  final String user;
+  final String author;
   final int score;
   final int comments;
   final String url;
@@ -23,7 +24,7 @@ class PostItem {
       this.title,
       this.subreddit,
       this.subredditPrefixed,
-      this.user,
+      this.author,
       this.score,
       this.comments,
       this.url,
@@ -31,28 +32,12 @@ class PostItem {
       this.locked,
       this.stickied);
 
-  getId() => id;
-
-  getSubreddit() => subreddit;
-
   renderable(BuildContext context) {
     return new Container(
       margin:
           const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
       child: Column(children: <Widget>[
-        Row(children: <Widget>[
-          Text(
-            subredditPrefixed,
-            style: Theme.of(context).textTheme.body2,
-          ),
-          SizedBox(width: 10),
-          Text(
-            'Posted by u/' + user,
-            style: Theme.of(context).textTheme.body1.apply(
-                  color: Colors.black54,
-                ),
-          ),
-        ]),
+        getPostHeader(context, subredditPrefixed, author),
         Column(children: <Widget>[
           Container(
             margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),

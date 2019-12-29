@@ -154,10 +154,9 @@ class _RedditPageState extends State<RedditPage> {
                         context,
                         MaterialPageRoute(builder: (context) {
                           var indexFixed = index ~/ 2;
+                          var item = _items[indexFixed];
                           return CommentsWidget(
-                              _reddit,
-                              _items[indexFixed].getSubreddit(),
-                              _items[indexFixed].getId());
+                              _reddit, item.subreddit, item.author, item.id);
                         }),
                       );
                     },

@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutter_reddit_app/post_util.dart';
 import 'package:reddit/reddit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'comment_item.dart';
 
 class CommentsWidget extends StatefulWidget {
-  CommentsWidget(this.reddit, this.subreddit, this.id);
-
-  final Reddit reddit;
-  final String subreddit;
-  final String id;
-
-  @override
-  _CommentsWidgetState createState() =>
-      _CommentsWidgetState(reddit, subreddit, id);
-}
-
-class _CommentsWidgetState extends State<CommentsWidget> {
-  _CommentsWidgetState(this._reddit, this._subreddit, this._id);
+  CommentsWidget(this._reddit, this._subreddit, this._author, this._id);
 
   final Reddit _reddit;
   final String _subreddit;
+  final String _author;
+  final String _id;
+
+  @override
+  _CommentsWidgetState createState() =>
+      _CommentsWidgetState(_reddit, _subreddit, _author, _id);
+}
+
+class _CommentsWidgetState extends State<CommentsWidget> {
+  _CommentsWidgetState(this._reddit, this._subreddit, this._author, this._id);
+
+  final Reddit _reddit;
+  final String _subreddit;
+  final String _author;
   final String _id;
   String _title;
   String _text;
@@ -73,9 +76,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (_subredditPrefixed != null)
-                        Text(_subredditPrefixed,
-                            style: Theme.of(context).textTheme.body2),
+                      getPostHeader(context, _subredditPrefixed, _author),
                       if (_subredditPrefixed != null) SizedBox(height: 10.0),
                       if (_title != null)
                         Text(_title, style: Theme.of(context).textTheme.title),

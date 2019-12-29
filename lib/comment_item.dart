@@ -5,13 +5,13 @@ import 'package:html_unescape/html_unescape.dart';
 import 'formatter.dart';
 
 class Comment {
-  Comment(this.text, this.author, this.flair, this.score, this.op);
+  Comment(this._text, this._author, this._flair, this._score, this._op);
 
-  final String text;
-  final String author;
-  final String flair;
-  final int score;
-  final bool op;
+  final String _text;
+  final String _author;
+  final String _flair;
+  final int _score;
+  final bool _op;
   List<Comment> replies = List<Comment>();
 
   _makeComment(BuildContext context) {
@@ -20,29 +20,29 @@ class Comment {
         children: <Widget>[
           Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
             Flexible(
-              child: Text(author,
+              child: Text(_author,
                   style: Theme.of(context).textTheme.body2.apply(
-                        color: op ? Colors.blue[800] : Colors.blue,
+                        color: _op ? Colors.blue[800] : Colors.blue,
                       )),
             ),
             SizedBox(width: 7.0),
-            if (flair != null && flair != '')
+            if (_flair != null && _flair != '')
               Flexible(
                 child: Container(
                   color: Colors.black54,
                   padding: const EdgeInsets.all(1.0),
-                  child: Text(flair,
+                  child: Text(_flair,
                       style: Theme.of(context)
                           .textTheme
                           .body2
                           .apply(color: Colors.white)),
                 ),
               ),
-            if (flair != null && flair != '') SizedBox(width: 7.0),
+            if (_flair != null && _flair != '') SizedBox(width: 7.0),
             Flexible(
               child: Text(
-                  score != null
-                      ? Formatter.uiCount(score) + ' points'
+                  _score != null
+                      ? Formatter.uiCount(_score) + ' points'
                       : 'Score hidden',
                   style: Theme.of(context)
                       .textTheme
@@ -51,7 +51,7 @@ class Comment {
             ),
           ]),
           SizedBox(height: 2.0),
-          Text(new HtmlUnescape().convert(text)),
+          Text(new HtmlUnescape().convert(_text)),
         ]);
   }
 
@@ -61,7 +61,7 @@ class Comment {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (author != null) _makeComment(context),
+              if (_author != null) _makeComment(context),
               if (replies != null)
                 Container(
                   margin: const EdgeInsets.only(left: 20.0),
