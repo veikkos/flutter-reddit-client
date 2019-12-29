@@ -47,6 +47,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
         Flexible(
           child: Linkify(
               text: _url,
+              humanize: true,
               onOpen: (LinkableElement link) {
                 if (canLaunch(link.url) != null) {
                   launch(link.url);
