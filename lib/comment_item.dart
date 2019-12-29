@@ -18,10 +18,12 @@ class Comment {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            Text(author,
-                style: Theme.of(context).textTheme.body2.apply(
-                      color: Colors.blue,
-                    )),
+            Flexible(
+              child: Text(author,
+                  style: Theme.of(context).textTheme.body2.apply(
+                        color: Colors.blue,
+                      )),
+            ),
             SizedBox(width: 7.0),
             if (flair != null && flair != '')
               Flexible(
@@ -36,14 +38,16 @@ class Comment {
                 ),
               ),
             if (flair != null && flair != '') SizedBox(width: 7.0),
-            Text(
-                score != null
-                    ? Formatter.uiCount(score) + ' points'
-                    : 'Score hidden',
-                style: Theme.of(context)
-                    .textTheme
-                    .body2
-                    .apply(color: Colors.black38)),
+            Flexible(
+              child: Text(
+                  score != null
+                      ? Formatter.uiCount(score) + ' points'
+                      : 'Score hidden',
+                  style: Theme.of(context)
+                      .textTheme
+                      .body2
+                      .apply(color: Colors.black38)),
+            ),
           ]),
           SizedBox(height: 2.0),
           Text(new HtmlUnescape().convert(text)),
