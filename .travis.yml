@@ -12,7 +12,6 @@ before_script:
   - git clone https://github.com/flutter/flutter.git -b beta
   - ./flutter/bin/flutter doctor
 script:
-  - ./flutter/bin/flutter analyze
   - ./flutter/bin/flutter build appbundle
 cache:
   directories:
