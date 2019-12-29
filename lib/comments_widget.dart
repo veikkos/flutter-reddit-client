@@ -35,13 +35,22 @@ class _CommentsWidgetState extends State<CommentsWidget> {
     if (_url.endsWith('.gif') || _url.endsWith('.jpg')) {
       return Image.network(_url);
     } else {
-      return Linkify(
-          text: _url,
-          onOpen: (LinkableElement link) {
-            if (canLaunch(link.url) != null) {
-              launch(link.url);
-            }
-          });
+      return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Icon(
+          Icons.link,
+          color: Colors.blueAccent,
+        ),
+        SizedBox(width: 2.0),
+        Flexible(
+          child: Linkify(
+              text: _url,
+              onOpen: (LinkableElement link) {
+                if (canLaunch(link.url) != null) {
+                  launch(link.url);
+                }
+              }),
+        )
+      ]);
     }
   }
 
@@ -140,7 +149,10 @@ class _CommentsWidgetState extends State<CommentsWidget> {
               String author = data['author'];
               if (body != null && author != null) {
                 if (comments == null) comments = new List<Comment>();
-                Comment comment = new Comment(body, author, data['author_flair_text'],
+                Comment comment = new Comment(
+                    body,
+                    author,
+                    data['author_flair_text'],
                     data['score_hidden'] ? null : data['score']);
                 var replies = data['replies'];
                 if (replies != null) {
