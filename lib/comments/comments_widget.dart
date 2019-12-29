@@ -85,7 +85,9 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                       if (_text != null)
                         Text(_text, style: Theme.of(context).textTheme.body1),
                       if (_url != null) _getContent(),
-                      Divider(),
+                      Divider(
+                        thickness: 2.0,
+                      ),
                       Text("Comments:",
                           style: Theme.of(context).textTheme.subtitle),
                     ]),

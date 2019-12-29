@@ -74,7 +74,9 @@ class Comment {
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
                       separatorBuilder: (context, index) {
-                        return Divider();
+                        return Divider(
+                          thickness: 2.0,
+                        );
                       },
                     ),
                   ),

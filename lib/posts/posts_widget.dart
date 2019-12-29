@@ -211,7 +211,9 @@ class _RedditPageState extends State<RedditPage> {
                     ),
                   ],
                 ),
-                Divider(),
+                Divider(
+                  thickness: 3.0,
+                ),
               ]),
             ),
           ),
@@ -220,7 +222,9 @@ class _RedditPageState extends State<RedditPage> {
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (index.isOdd) {
-                  return Divider();
+                  return Divider(
+                    thickness: 2.0,
+                  );
                 }
                 return InkWell(
                     onTap: () {
