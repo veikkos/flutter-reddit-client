@@ -56,7 +56,7 @@ class _RedditPageState extends State<RedditPage> {
                   data['title'],
                   data['subreddit'],
                   data['subreddit_name_prefixed'],
-                  data['author_fullname'],
+                  data['author'],
                   data['score'],
                   data['num_comments'],
                   data['likes'],
