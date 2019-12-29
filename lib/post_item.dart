@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -56,35 +58,37 @@ class PostItem {
                   ),
                 ]),
           ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  child: Row(children: <Widget>[
-                    Icon(
-                      Icons.comment,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(width: 3),
-                    Text(
-                      Formatter.uiCount(comments),
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ]),
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+            Container(
+                child: Row(children: <Widget>[
+              Transform.rotate(
+                angle: -pi / 2,
+                child: Icon(
+                  Icons.forward,
+                  color: Colors.red,
                 ),
-                Container(
-                    child: Row(children: <Widget>[
-                  Icon(
-                    Icons.arrow_upward,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 3),
-                  Text(
-                    Formatter.uiCount(score),
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                ])),
-              ])
+              ),
+              SizedBox(width: 1),
+              Text(
+                Formatter.uiCount(score),
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ])),
+            SizedBox(width: 10),
+            Container(
+              child: Row(children: <Widget>[
+                Icon(
+                  Icons.comment,
+                  color: Colors.grey,
+                ),
+                SizedBox(width: 5),
+                Text(
+                  Formatter.uiCount(comments),
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ]),
+            ),
+          ])
         ])
       ]),
     );
