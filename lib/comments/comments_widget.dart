@@ -172,19 +172,23 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   }
 
   _fetchComments() {
-    _reddit.sub(_subreddit).comments(_id).fetch().then((result) {
-      setState(() {
-        loading = false;
-        var data = result['data'];
-        var postInfo = _parsePostInfo(data[0]);
-        _title = postInfo['title'];
-        _text = postInfo['selftext'];
-        _url = postInfo['url'];
-        _subredditPrefixed = postInfo['subreddit_name_prefixed'];
-        if (_text == '') _text = null;
-        _baseComments = _parseReplies(data[1]);
+    try {
+      _reddit.sub(_subreddit).comments(_id).fetch().then((result) {
+        setState(() {
+          loading = false;
+          var data = result['data'];
+          var postInfo = _parsePostInfo(data[0]);
+          _title = postInfo['title'];
+          _text = postInfo['selftext'];
+          _url = postInfo['url'];
+          _subredditPrefixed = postInfo['subreddit_name_prefixed'];
+          if (_text == '') _text = null;
+          _baseComments = _parseReplies(data[1]);
+        });
       });
-    });
+    } on RedditApiException catch (e) {
+      print(e);
+    }
   }
 
   @override

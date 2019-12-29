@@ -104,23 +104,28 @@ class _RedditPageState extends State<RedditPage> {
 
   _getSubredditList(String pattern) async {
     var completer = new Completer<List<String>>();
-    _reddit.popularSubreddits().fetch().then((result) {
-      var data = result['data'];
-      if (data != null) {
-        var children = data['children'];
-        if (children != null) {
-          var list = children
-              .map<String>((item) => item['data']['display_name'].toString())
-              .toList();
-          list.sort();
-          return completer.complete(list.where((sub) {
-            return sub.toLowerCase().contains(pattern.toLowerCase()) == true;
-          }).toList());
+    try {
+      _reddit.popularSubreddits().fetch().then((result) {
+        var data = result['data'];
+        if (data != null) {
+          var children = data['children'];
+          if (children != null) {
+            var list = children
+                .map<String>((item) => item['data']['display_name'].toString())
+                .toList();
+            list.sort();
+            return completer.complete(list.where((sub) {
+              return sub.toLowerCase().contains(pattern.toLowerCase()) == true;
+            }).toList());
+          }
         }
-      }
 
+        return completer.complete(List<String>());
+      });
+    } on RedditApiException catch (e) {
+      print(e);
       return completer.complete(List<String>());
-    });
+    }
 
     return completer.future;
   }
