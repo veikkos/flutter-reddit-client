@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_reddit_app/post_item.dart';
+import 'package:flutter_reddit_app/posts/post_item.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:reddit/reddit.dart';
 
-import 'comments_widget.dart';
+import 'package:flutter_reddit_app/comments/comments_widget.dart';
 
 class PostsWidget extends StatelessWidget {
   PostsWidget(this.reddit);

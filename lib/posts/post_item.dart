@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_reddit_app/post_util.dart';
-
-import 'formatter.dart';
+import 'package:flutter_reddit_app/util/formatter.dart';
+import 'package:flutter_reddit_app/util/post_util.dart';
 
 class PostItem {
   final String id;

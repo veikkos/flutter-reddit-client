@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:flutter_reddit_app/post_util.dart';
+import 'package:flutter_reddit_app/util/post_util.dart';
 import 'package:reddit/reddit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'comment_item.dart';
+import 'package:flutter_reddit_app/comments/comment_item.dart';
 
 class CommentsWidget extends StatefulWidget {
   CommentsWidget(this._reddit, this._subreddit, this._author, this._id);

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_reddit_app/util/formatter.dart';
 import 'package:html_unescape/html_unescape.dart';
-
-import 'formatter.dart';
 
 class Comment {
   Comment(this._text, this._author, this._flair, this._score, this._op);
