@@ -5,12 +5,13 @@ import 'package:html_unescape/html_unescape.dart';
 import 'formatter.dart';
 
 class Comment {
-  Comment(this.text, this.author, this.flair, this.score);
+  Comment(this.text, this.author, this.flair, this.score, this.op);
 
   final String text;
   final String author;
   final String flair;
   final int score;
+  final bool op;
   List<Comment> replies = List<Comment>();
 
   _makeComment(BuildContext context) {
@@ -21,7 +22,7 @@ class Comment {
             Flexible(
               child: Text(author,
                   style: Theme.of(context).textTheme.body2.apply(
-                        color: Colors.blue,
+                        color: op ? Colors.blue[800] : Colors.blue,
                       )),
             ),
             SizedBox(width: 7.0),
