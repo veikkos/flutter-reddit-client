@@ -163,33 +163,41 @@ class _RedditPageState extends State<RedditPage> {
             child: Container(
               padding: const EdgeInsets.only(top: 10.0, left: 20.0),
               child: Column(children: <Widget>[
-                TypeAheadField(
-                    textFieldConfiguration: TextFieldConfiguration(
-                      controller: TextEditingController()
-                        ..text = _subreddit.name,
-                      style: new TextStyle(
-                        fontSize: 24.0,
-                      ),
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixText: 'r/',
-                          hintText: 'type subreddit (e.g. "all")'),
-                      onSubmitted: (text) {
-                        _updateSubreddit(text);
-                      },
+                Row(
+                  children: <Widget>[
+                    Icon(Icons.search),
+                    SizedBox(width: 5.0),
+                    Expanded(
+                      child: TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                            controller: TextEditingController()
+                              ..text = _subreddit.name,
+                            style: new TextStyle(
+                              fontSize: 24.0,
+                            ),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixText: 'r/',
+                                hintText: 'type subreddit (e.g. "all")'),
+                            onSubmitted: (text) {
+                              _updateSubreddit(text);
+                            },
+                          ),
+                          suggestionsCallback: (pattern) async {
+                            return await _getSubredditList(pattern);
+                          },
+                          itemBuilder: (context, suggestion) {
+                            return ListTile(
+                              title: Text(suggestion),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            _updateSubreddit(suggestion);
+                          },
+                          noItemsFoundBuilder: (BuildContext context) => null),
                     ),
-                    suggestionsCallback: (pattern) async {
-                      return await _getSubredditList(pattern);
-                    },
-                    itemBuilder: (context, suggestion) {
-                      return ListTile(
-                        title: Text(suggestion),
-                      );
-                    },
-                    onSuggestionSelected: (suggestion) {
-                      _updateSubreddit(suggestion);
-                    },
-                    noItemsFoundBuilder: (BuildContext context) => null),
+                  ],
+                ),
                 Divider(),
               ]),
             ),
