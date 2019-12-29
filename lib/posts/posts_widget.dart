@@ -45,7 +45,7 @@ class _RedditPageState extends State<RedditPage> {
 
   _refreshPosts() {
     if (_subreddit != null && _subreddit.isNotEmpty)
-      _reddit.sub(_subreddit).hot().limit(20).fetch().then((result) {
+      _reddit.sub(_subreddit).hot().fetch().then((result) {
         setState(() {
           var data = result['data'];
           if (data != null && data != '') {
