@@ -44,7 +44,9 @@ class PostItem {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   if (thumbnailUrl != null)
-                    Image.network(thumbnailUrl, width: 80.0),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(3.0),
+                        child: Image.network(thumbnailUrl, width: 80.0)),
                   if (thumbnailUrl != null) SizedBox(width: 10.0),
                   Flexible(
                     child: Text(
