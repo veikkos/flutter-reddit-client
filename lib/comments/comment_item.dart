@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/util/formatter.dart';
-import 'package:html_unescape/html_unescape.dart';
+import 'package:flutter_reddit_app/util/post_util.dart';
 
 class Comment {
   Comment(this._text, this._author, this._flair, this._score, this._op);
@@ -50,7 +50,7 @@ class Comment {
             ),
           ]),
           SizedBox(height: 2.0),
-          Text(new HtmlUnescape().convert(_text)),
+          getMarkdownText(_text),
         ]);
   }
 

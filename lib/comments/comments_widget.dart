@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutter_reddit_app/comments/comment_item.dart';
 import 'package:flutter_reddit_app/util/post_util.dart';
 import 'package:reddit/reddit.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:flutter_reddit_app/comments/comment_item.dart';
 
 class CommentsWidget extends StatefulWidget {
   CommentsWidget(this._reddit, this._subreddit, this._author, this._id);
@@ -82,8 +81,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                       if (_title != null)
                         Text(_title, style: Theme.of(context).textTheme.title),
                       if (_text != null || _url != null) SizedBox(height: 10.0),
-                      if (_text != null)
-                        Text(_text, style: Theme.of(context).textTheme.body1),
+                      if (_text != null) getMarkdownText(_text),
                       if (_url != null) _getContent(),
                       Divider(
                         thickness: 2.0,

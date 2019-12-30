@@ -1,5 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:html_unescape/html_unescape.dart';
+
+getMarkdownText(String text) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      Flexible(child: MarkdownBody(data: HtmlUnescape().convert(text))),
+    ],
+  );
+}
 
 getPostHeader(BuildContext context, String subredditPrefixed, String user) {
   return Row(children: <Widget>[
