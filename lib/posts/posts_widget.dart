@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -198,7 +199,7 @@ class _RedditPageState extends State<RedditPage> {
                       );
                     },
                     child: _items[index ~/ 2].renderable(context));
-              }, childCount: (_items.length * 2) - 1),
+              }, childCount: max(_items.length * 2 - 1, 0)),
             ),
           ),
         ],
