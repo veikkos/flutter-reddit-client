@@ -82,6 +82,10 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                         Text(_title, style: Theme.of(context).textTheme.title),
                       if (_text != null || _url != null) SizedBox(height: 10.0),
                       if (_text != null) getMarkdownText(_text),
+                      if (_url != null)
+                        SizedBox(
+                          height: 5.0,
+                        ),
                       if (_url != null) _getContent(),
                       Divider(
                         thickness: 2.0,
