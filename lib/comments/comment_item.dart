@@ -21,7 +21,9 @@ class Comment {
             Flexible(
               child: Text(_author,
                   style: Theme.of(context).textTheme.body2.apply(
-                        color: _op ? Colors.blue[800] : Colors.blue,
+                        color: _op
+                            ? Theme.of(context).primaryColorDark
+                            : Theme.of(context).primaryColor,
                       )),
             ),
             SizedBox(width: 7.0),
