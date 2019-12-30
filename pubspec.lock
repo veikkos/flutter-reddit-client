@@ -223,8 +223,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: fix-array-decode
-      resolved-ref: d3b6fdc5a92dd6c7aff10febf3debef2068dc275
+      ref: master
+      resolved-ref: de0748949b8c0bba1762e549cbb62d22ccbdce94
       url: "git://github.com/veikkos/dart-reddit.git"
     source: git
     version: "0.6.0"
