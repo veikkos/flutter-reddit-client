@@ -33,8 +33,14 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   List<Comment> _baseComments;
   bool loading = true;
 
+  static _contentIsInlineable(String url) {
+    return url.endsWith('.gif') ||
+        url.endsWith('.jpg') ||
+        url.endsWith('.png');
+  }
+
   _getContent() {
-    if (_url.endsWith('.gif') || _url.endsWith('.jpg')) {
+    if (_contentIsInlineable(_url)) {
       return Image.network(_url);
     } else {
       return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
