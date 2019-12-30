@@ -159,8 +159,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
               String body = data['body'];
               String author = data['author'];
               if (body != null && author != null) {
-                if (comments == null) comments = new List<Comment>();
-                Comment comment = new Comment(
+                if (comments == null) comments = List<Comment>();
+                Comment comment = Comment(
                     body,
                     author,
                     data['author_flair_text'],

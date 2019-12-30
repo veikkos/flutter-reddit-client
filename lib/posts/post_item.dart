@@ -32,7 +32,7 @@ class PostItem {
       this.stickied);
 
   renderable(BuildContext context) {
-    return new Container(
+    return Container(
       margin:
           const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
       child: Column(children: <Widget>[

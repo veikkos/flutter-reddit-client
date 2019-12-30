@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:reddit/reddit.dart';
 
 void main() {
-  Reddit reddit = new Reddit(new http.Client());
+  Reddit reddit = Reddit(http.Client());
   reddit.authSetup(RedditSecrets.identifier, RedditSecrets.secret);
   reddit.authFinish();
 

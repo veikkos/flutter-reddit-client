@@ -42,7 +42,7 @@ class _RedditPageState extends State<RedditPage> {
 
   Reddit _reddit;
   SubredditInfo _subredditInfo = SubredditInfo.all();
-  List<PostItem> _items = new List<PostItem>();
+  List<PostItem> _items = List<PostItem>();
 
   _refreshPosts(String subredditName) {
     try {
@@ -52,7 +52,7 @@ class _RedditPageState extends State<RedditPage> {
           if (data != null && data != '') {
             _items = data['children'].map<PostItem>((d) {
               var data = d['data'];
-              return new PostItem(
+              return PostItem(
                   data['id'],
                   data['title'],
                   data['subreddit'],
@@ -76,7 +76,7 @@ class _RedditPageState extends State<RedditPage> {
   }
 
   _getSubredditList(String pattern) async {
-    var completer = new Completer<List<String>>();
+    var completer = Completer<List<String>>();
     try {
       _reddit.popularSubreddits().fetch().then((result) {
         var data = result['data'];
@@ -139,7 +139,7 @@ class _RedditPageState extends State<RedditPage> {
                           textFieldConfiguration: TextFieldConfiguration(
                             controller: TextEditingController()
                               ..text = _subredditInfo.name,
-                            style: new TextStyle(
+                            style: TextStyle(
                               fontSize: 24.0,
                             ),
                             decoration: InputDecoration(
