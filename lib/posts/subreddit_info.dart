@@ -12,7 +12,8 @@ class SubredditInfo {
 
   get hasData => title != null || headerImg != null || icon != null;
 
-  static Future<SubredditInfo> getSubredditInfo(Reddit reddit, String subreddit) async {
+  static Future<SubredditInfo> getSubredditInfo(
+      Reddit reddit, String subreddit) async {
     var completer = Completer<SubredditInfo>();
     try {
       reddit.sub(subreddit).about().fetch().then((result) {

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/comments/comments_widget.dart';
 import 'package:flutter_reddit_app/posts/post_item.dart';
 import 'package:flutter_reddit_app/posts/subreddit_info.dart';
-import 'package:flutter_reddit_app/util/post_util.dart';
+import 'package:flutter_reddit_app/util/util.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:reddit/reddit.dart';
 
@@ -53,10 +53,6 @@ class _RedditPageState extends State<RedditPage> {
           if (data != null && data != '') {
             _items = data['children'].map<PostItem>((d) {
               var data = d['data'];
-              List<Awardings> awardings = data['all_awardings']
-                  .map<Awardings>(
-                      (item) => Awardings(item['count'], item['icon_url']))
-                  .toList();
               return PostItem(
                   data['id'],
                   data['title'],
@@ -71,7 +67,7 @@ class _RedditPageState extends State<RedditPage> {
                       : null,
                   data['locked'],
                   data['stickied'],
-                  awardings);
+                  parseAwardings(data['all_awardings']));
             }).toList();
           }
         });

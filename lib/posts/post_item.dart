@@ -3,14 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/util/formatter.dart';
-import 'package:flutter_reddit_app/util/post_util.dart';
-
-class Awardings {
-  Awardings(this.count, this.icon);
-
-  num count;
-  String icon;
-}
+import 'package:flutter_reddit_app/util/util.dart';
 
 class PostItem {
   final String id;
@@ -39,18 +32,6 @@ class PostItem {
       this.locked,
       this.stickied,
       this.awardings);
-
-  _getAwardings() {
-    return awardings
-        .where((awardings) => awardings.count > 0)
-        .map<Widget>((awardings) => Row(children: [
-              SizedBox(width: 7),
-              Image.network(
-                awardings.icon,
-                width: 20,
-              ),
-            ]));
-  }
 
   renderable(BuildContext context) {
     return Container(
@@ -119,7 +100,7 @@ class PostItem {
                 ),
               ]),
             ),
-            ..._getAwardings(),
+            ...getAwardings(awardings),
           ])
         ])
       ]),

@@ -62,3 +62,28 @@ getSubredditAppBar(
         : null,
   );
 }
+
+class Awardings {
+  Awardings(this.count, this.icon);
+
+  num count;
+  String icon;
+}
+
+getAwardings(List<Awardings> awardings) {
+  return awardings
+      .where((awardings) => awardings.count > 0)
+      .map<Widget>((awardings) => Row(children: [
+            SizedBox(width: 7),
+            Image.network(
+              awardings.icon,
+              width: 20,
+            ),
+          ]));
+}
+
+parseAwardings(var data) {
+  return data
+      .map<Awardings>((item) => Awardings(item['count'], item['icon_url']))
+      .toList();
+}

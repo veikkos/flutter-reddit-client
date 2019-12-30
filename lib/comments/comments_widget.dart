@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_reddit_app/comments/comment_item.dart';
 import 'package:flutter_reddit_app/posts/subreddit_info.dart';
-import 'package:flutter_reddit_app/util/post_util.dart';
+import 'package:flutter_reddit_app/util/util.dart';
 import 'package:reddit/reddit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -165,7 +165,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     author,
                     data['author_flair_text'],
                     data['score_hidden'] ? null : data['score'],
-                    data['is_submitter']);
+                    data['is_submitter'],
+                    parseAwardings(data['all_awardings']));
                 var replies = data['replies'];
                 if (replies != null) {
                   comment.replies = _parseReplies(replies);
