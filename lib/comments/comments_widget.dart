@@ -2,28 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_reddit_app/comments/comment_item.dart';
+import 'package:flutter_reddit_app/posts/subreddit_info.dart';
 import 'package:flutter_reddit_app/util/post_util.dart';
 import 'package:reddit/reddit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommentsWidget extends StatefulWidget {
-  CommentsWidget(this._reddit, this._subreddit, this._author, this._id);
+  CommentsWidget(this._reddit, this._subredditInfo, this._author, this._id);
 
   final Reddit _reddit;
-  final String _subreddit;
+  final SubredditInfo _subredditInfo;
   final String _author;
   final String _id;
 
   @override
   _CommentsWidgetState createState() =>
-      _CommentsWidgetState(_reddit, _subreddit, _author, _id);
+      _CommentsWidgetState(_reddit, _subredditInfo, _author, _id);
 }
 
 class _CommentsWidgetState extends State<CommentsWidget> {
-  _CommentsWidgetState(this._reddit, this._subreddit, this._author, this._id);
+  _CommentsWidgetState(
+      this._reddit, this._subredditInfo, this._author, this._id);
 
   final Reddit _reddit;
-  final String _subreddit;
   final String _author;
   final String _id;
   String _title;
@@ -32,6 +33,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   String _url;
   List<Comment> _baseComments;
   bool loading = true;
+  SubredditInfo _subredditInfo;
 
   static _contentIsInlineable(String url) {
     return url.endsWith('.gif') || url.endsWith('.jpg') || url.endsWith('.png');
@@ -119,10 +121,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            title: Text('Comments'),
-            floating: true,
-          ),
+          getSubredditAppBar('Comments', _title, _subredditInfo.icon,
+              _subredditInfo.headerImg),
           ..._getView(),
         ],
       ),
@@ -182,7 +182,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
 
   _fetchComments() {
     try {
-      _reddit.sub(_subreddit).comments(_id).fetch().then((result) {
+      _reddit.sub(_subredditInfo.name).comments(_id).fetch().then((result) {
         setState(() {
           loading = false;
           var data = result['data'];
@@ -204,5 +204,15 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   void initState() {
     super.initState();
     _fetchComments();
+    if (!_subredditInfo.hasData) {
+      SubredditInfo.getSubredditInfo(_reddit, _subredditInfo.name)
+          .then((subredditInfo) {
+        if (subredditInfo != null) {
+          setState(() {
+            _subredditInfo = subredditInfo;
+          });
+        }
+      });
+    }
   }
 }

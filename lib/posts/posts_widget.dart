@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_reddit_app/comments/comments_widget.dart';
 import 'package:flutter_reddit_app/posts/post_item.dart';
 import 'package:flutter_reddit_app/posts/subreddit_info.dart';
+import 'package:flutter_reddit_app/util/post_util.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:reddit/reddit.dart';
-
-import 'package:flutter_reddit_app/comments/comments_widget.dart';
 
 class PostsWidget extends StatelessWidget {
   PostsWidget(this.reddit);
@@ -41,61 +41,34 @@ class _RedditPageState extends State<RedditPage> {
   _RedditPageState(this._reddit);
 
   Reddit _reddit;
-  SubredditInfo _subreddit = SubredditInfo('all');
+  SubredditInfo _subredditInfo = SubredditInfo.all();
   List<PostItem> _items = new List<PostItem>();
 
-  _refreshPosts() {
-    if (_subreddit.name.isNotEmpty) {
-      try {
-        _reddit.sub(_subreddit.name).hot().fetch().then((result) {
-          setState(() {
-            var data = result['data'];
-            if (data != null && data != '') {
-              _items = data['children'].map<PostItem>((d) {
-                var data = d['data'];
-                return new PostItem(
-                    data['id'],
-                    data['title'],
-                    data['subreddit'],
-                    data['subreddit_name_prefixed'],
-                    data['author'],
-                    data['score'],
-                    data['num_comments'],
-                    data['likes'],
-                    data['thumbnail'].toString().contains('http')
-                        ? data['thumbnail']
-                        : null,
-                    data['locked'],
-                    data['stickied']);
-              }).toList();
-            }
-          });
-        });
-      } on RedditApiException catch (e) {
-        print(e);
-      }
-    }
-  }
-
-  _getSubredditInfo() {
+  _refreshPosts(String subredditName) {
     try {
-      _reddit.sub(_subreddit.name).about().fetch().then((result) {
-        var data = result['data'];
-        if (data != null) {
-          setState(() {
-            var bannerImg = data['banner_img'];
-            var bannerBackgroundImage = data['banner_background_image'];
-            var iconImg = data['icon_img'];
-            _subreddit = SubredditInfo(_subreddit.name,
-                title: data['title'],
-                headerImg: bannerImg != null && bannerImg != ''
-                    ? bannerImg
-                    : bannerBackgroundImage != ''
-                        ? bannerBackgroundImage
-                        : null,
-                icon: iconImg != null && iconImg != '' ? iconImg : null);
-          });
-        }
+      _reddit.sub(subredditName).hot().fetch().then((result) {
+        setState(() {
+          var data = result['data'];
+          if (data != null && data != '') {
+            _items = data['children'].map<PostItem>((d) {
+              var data = d['data'];
+              return new PostItem(
+                  data['id'],
+                  data['title'],
+                  data['subreddit'],
+                  data['subreddit_name_prefixed'],
+                  data['author'],
+                  data['score'],
+                  data['num_comments'],
+                  data['likes'],
+                  data['thumbnail'].toString().contains('http')
+                      ? data['thumbnail']
+                      : null,
+                  data['locked'],
+                  data['stickied']);
+            }).toList();
+          }
+        });
       });
     } on RedditApiException catch (e) {
       print(e);
@@ -130,10 +103,19 @@ class _RedditPageState extends State<RedditPage> {
     return completer.future;
   }
 
-  _updateSubreddit(String subreddit) {
-    _subreddit = SubredditInfo(subreddit);
-    _refreshPosts();
-    _getSubredditInfo();
+  _updateSubreddit(String subreddit) async {
+    _refreshPosts(subreddit);
+    SubredditInfo.getSubredditInfo(_reddit, subreddit).then((subredditInfo) {
+      if (subredditInfo != null) {
+        setState(() {
+          _subredditInfo = subredditInfo;
+        });
+      } else {
+        setState(() {
+          _subredditInfo = SubredditInfo.all();
+        });
+      }
+    });
   }
 
   @override
@@ -141,36 +123,8 @@ class _RedditPageState extends State<RedditPage> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: _subreddit.icon != null ? Colors.black : null,
-            title: _subreddit.icon != null ? null : Text(widget.title),
-            expandedHeight: _subreddit.icon != null ? 130.0 : 0,
-            flexibleSpace: _subreddit.icon != null
-                ? FlexibleSpaceBar(
-                    centerTitle: true,
-                    title: _subreddit.icon != null
-                        ? Container(
-                            padding: const EdgeInsets.all(2.0),
-                            decoration: new BoxDecoration(
-                              color: Colors.black26,
-                              shape: BoxShape.circle,
-                            ),
-                            child: CircleAvatar(
-                                radius: 32,
-                                backgroundImage: NetworkImage(_subreddit.icon)),
-                          )
-                        : Text(_subreddit.title),
-                    background: _subreddit.headerImg != null
-                        ? Opacity(
-                            opacity: 0.7,
-                            child: Image.network(
-                              _subreddit.headerImg,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : null)
-                : null,
-          ),
+          getSubredditAppBar(widget.title, _subredditInfo.title,
+              _subredditInfo.icon, _subredditInfo.headerImg),
           SliverToBoxAdapter(
             child: Container(
               padding:
@@ -184,7 +138,7 @@ class _RedditPageState extends State<RedditPage> {
                       child: TypeAheadField(
                           textFieldConfiguration: TextFieldConfiguration(
                             controller: TextEditingController()
-                              ..text = _subreddit.name,
+                              ..text = _subredditInfo.name,
                             style: new TextStyle(
                               fontSize: 24.0,
                             ),
@@ -192,8 +146,8 @@ class _RedditPageState extends State<RedditPage> {
                                 border: InputBorder.none,
                                 prefixText: 'r/',
                                 hintText: 'type subreddit (e.g. "all")'),
-                            onSubmitted: (text) {
-                              _updateSubreddit(text);
+                            onSubmitted: (subreddit) {
+                              _updateSubreddit(subreddit);
                             },
                           ),
                           suggestionsCallback: (pattern) async {
@@ -204,8 +158,8 @@ class _RedditPageState extends State<RedditPage> {
                               title: Text(suggestion),
                             );
                           },
-                          onSuggestionSelected: (suggestion) {
-                            _updateSubreddit(suggestion);
+                          onSuggestionSelected: (subreddit) {
+                            _updateSubreddit(subreddit);
                           },
                           noItemsFoundBuilder: (BuildContext context) => null),
                     ),
@@ -234,7 +188,12 @@ class _RedditPageState extends State<RedditPage> {
                           var indexFixed = index ~/ 2;
                           var item = _items[indexFixed];
                           return CommentsWidget(
-                              _reddit, item.subreddit, item.author, item.id);
+                              _reddit,
+                              item.subreddit == _subredditInfo.name
+                                  ? _subredditInfo
+                                  : SubredditInfo(item.subreddit),
+                              item.author,
+                              item.id);
                         }),
                       );
                     },
@@ -245,7 +204,7 @@ class _RedditPageState extends State<RedditPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _refreshPosts,
+        onPressed: () => _refreshPosts(_subredditInfo.name),
         tooltip: 'Refresh',
         child: Icon(Icons.refresh),
       ),
@@ -255,7 +214,6 @@ class _RedditPageState extends State<RedditPage> {
   @override
   void initState() {
     super.initState();
-    _refreshPosts();
-    _getSubredditInfo();
+    _refreshPosts(_subredditInfo.name);
   }
 }
