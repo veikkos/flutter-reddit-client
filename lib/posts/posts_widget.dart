@@ -53,6 +53,10 @@ class _RedditPageState extends State<RedditPage> {
           if (data != null && data != '') {
             _items = data['children'].map<PostItem>((d) {
               var data = d['data'];
+              List<Awardings> awardings = data['all_awardings']
+                  .map<Awardings>(
+                      (item) => Awardings(item['count'], item['icon_url']))
+                  .toList();
               return PostItem(
                   data['id'],
                   data['title'],
@@ -66,7 +70,8 @@ class _RedditPageState extends State<RedditPage> {
                       ? data['thumbnail']
                       : null,
                   data['locked'],
-                  data['stickied']);
+                  data['stickied'],
+                  awardings);
             }).toList();
           }
         });

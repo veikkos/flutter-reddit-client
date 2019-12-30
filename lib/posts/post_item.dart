@@ -5,6 +5,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/util/formatter.dart';
 import 'package:flutter_reddit_app/util/post_util.dart';
 
+class Awardings {
+  Awardings(this.count, this.icon);
+
+  num count;
+  String icon;
+}
+
 class PostItem {
   final String id;
   final String title;
@@ -17,6 +24,7 @@ class PostItem {
   final String thumbnailUrl;
   final bool locked;
   final bool stickied;
+  final List<Awardings> awardings;
 
   PostItem(
       this.id,
@@ -29,7 +37,20 @@ class PostItem {
       this.url,
       this.thumbnailUrl,
       this.locked,
-      this.stickied);
+      this.stickied,
+      this.awardings);
+
+  _getAwardings() {
+    return awardings
+        .where((awardings) => awardings.count > 0)
+        .map<Widget>((awardings) => Row(children: [
+              SizedBox(width: 7),
+              Image.network(
+                awardings.icon,
+                width: 20,
+              ),
+            ]));
+  }
 
   renderable(BuildContext context) {
     return Container(
@@ -98,6 +119,7 @@ class PostItem {
                 ),
               ]),
             ),
+            ..._getAwardings(),
           ])
         ])
       ]),
