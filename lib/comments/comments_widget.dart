@@ -34,9 +34,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   bool loading = true;
 
   static _contentIsInlineable(String url) {
-    return url.endsWith('.gif') ||
-        url.endsWith('.jpg') ||
-        url.endsWith('.png');
+    return url.endsWith('.gif') || url.endsWith('.jpg') || url.endsWith('.png');
   }
 
   _getContent() {
@@ -78,7 +76,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
         : [
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.all(10.0),
+                padding:
+                    const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
