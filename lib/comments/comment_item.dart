@@ -54,33 +54,44 @@ class Comment {
         ]);
   }
 
-  renderable(BuildContext context) {
+  _makeWrappedComment(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top: 10.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              if (_author != null) _makeComment(context),
-              if (replies != null)
-                Container(
-                  margin: const EdgeInsets.only(left: 20.0),
-                  child: MediaQuery.removePadding(
-                    context: context,
-                    removeTop: true,
-                    child: ListView.separated(
-                      itemBuilder: (context, index) =>
-                          replies[index].renderable(context),
-                      itemCount: replies.length,
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      separatorBuilder: (context, index) {
-                        return Divider(
-                          thickness: 2.0,
-                        );
-                      },
+            children: [if (_author != null) _makeComment(context)]));
+  }
+
+  renderable(BuildContext context) {
+    final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+    return replies != null
+        ? Theme(
+            data: theme,
+            child: ListTileTheme(
+              contentPadding: const EdgeInsets.all(0),
+              child: ExpansionTile(
+                initiallyExpanded: true,
+                title: _makeWrappedComment(context),
+                trailing: null,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 20.0),
+                    child: MediaQuery.removePadding(
+                      context: context,
+                      removeTop: true,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) =>
+                            replies[index].renderable(context),
+                        itemCount: replies.length,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                      ),
                     ),
-                  ),
-                )
-            ]));
+                  )
+                ],
+              ),
+            ),
+          )
+        : _makeWrappedComment(context);
   }
 }
