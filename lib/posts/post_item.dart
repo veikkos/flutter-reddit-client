@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/util/formatter.dart';
 import 'package:flutter_reddit_app/util/util.dart';
+import 'package:html_unescape/html_unescape_small.dart';
 
 class PostItem {
   final String id;
@@ -52,7 +53,7 @@ class PostItem {
                   if (thumbnailUrl != null) SizedBox(width: 10.0),
                   Flexible(
                     child: Text(
-                      title,
+                      HtmlUnescape().convert(title),
                       style: Theme.of(context).textTheme.body1,
                     ),
                   ),

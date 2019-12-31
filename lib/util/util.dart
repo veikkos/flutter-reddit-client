@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:html_unescape/html_unescape.dart';
+import 'package:html_unescape/html_unescape_small.dart';
 
 getMarkdownText(String text) {
   return Column(
