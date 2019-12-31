@@ -58,7 +58,7 @@ class PostItem {
                   ),
                 ]),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+          Row(children: <Widget>[
             Container(
                 child: Row(children: <Widget>[
               if (stickied)
@@ -100,8 +100,8 @@ class PostItem {
                 ),
               ]),
             ),
-            ...getAwardings(awardings),
-          ])
+            getAwardings(awardings),
+          ]),
         ])
       ]),
     );

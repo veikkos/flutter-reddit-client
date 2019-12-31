@@ -71,15 +71,22 @@ class Awardings {
 }
 
 getAwardings(List<Awardings> awardings) {
-  return awardings
-      .where((awardings) => awardings.count > 0)
-      .map<Widget>((awardings) => Row(children: [
-            SizedBox(width: 7),
-            Image.network(
-              awardings.icon,
-              width: 20,
-            ),
-          ]));
+  return Flexible(
+    child: Wrap(
+      children: awardings
+          .where((awardings) => awardings.count > 0)
+          .map<Widget>(
+            (awardings) => Row(mainAxisSize: MainAxisSize.min, children: [
+              SizedBox(width: 7),
+              Image.network(
+                awardings.icon,
+                width: 20,
+              ),
+            ]),
+          )
+          .toList(),
+    ),
+  );
 }
 
 parseAwardings(var data) {

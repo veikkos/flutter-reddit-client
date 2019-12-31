@@ -52,7 +52,7 @@ class Comment {
                       .body2
                       .apply(color: Colors.black38)),
             ),
-            ...getAwardings(_awardings)
+            getAwardings(_awardings)
           ]),
           SizedBox(height: 2.0),
           getMarkdownText(_text),
