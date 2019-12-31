@@ -195,7 +195,8 @@ class _RedditPageState extends State<RedditPage> {
                           var item = _items[indexFixed];
                           return CommentsWidget(
                               _reddit,
-                              item.subreddit == _subredditInfo.name
+                              item.subreddit.toLowerCase() ==
+                                      _subredditInfo.name.toLowerCase()
                                   ? _subredditInfo
                                   : SubredditInfo(item.subreddit),
                               item.author,
