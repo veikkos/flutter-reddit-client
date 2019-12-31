@@ -54,6 +54,7 @@ class _RedditPageState extends State<RedditPage> {
             _items = data['children'].map<PostItem>((d) {
               var data = d['data'];
               return PostItem(
+                  data['created_utc'],
                   data['id'],
                   data['title'],
                   data['subreddit'],

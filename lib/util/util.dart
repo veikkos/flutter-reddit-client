@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html_unescape/html_unescape_small.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 getMarkdownText(String text) {
   return Column(
@@ -12,7 +13,10 @@ getMarkdownText(String text) {
   );
 }
 
-getPostHeader(BuildContext context, String subredditPrefixed, String user) {
+getPostHeader(BuildContext context, String subredditPrefixed, String user,
+    {num created}) {
+  String time = timeAgo.format(
+      DateTime.fromMillisecondsSinceEpoch(created.toInt() * 1000, isUtc: true));
   return Row(children: <Widget>[
     Text(
       subredditPrefixed,
@@ -21,7 +25,7 @@ getPostHeader(BuildContext context, String subredditPrefixed, String user) {
     SizedBox(width: 10),
     Flexible(
       child: Text(
-        'Posted by u/' + user,
+        'By u/$user $time',
         style: Theme.of(context).textTheme.body1.apply(
               color: Colors.black54,
             ),

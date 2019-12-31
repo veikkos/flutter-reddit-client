@@ -7,6 +7,7 @@ import 'package:flutter_reddit_app/util/util.dart';
 import 'package:html_unescape/html_unescape_small.dart';
 
 class PostItem {
+  final num created;
   final String id;
   final String title;
   final String subreddit;
@@ -21,6 +22,7 @@ class PostItem {
   final List<Awardings> awardings;
 
   PostItem(
+      this.created,
       this.id,
       this.title,
       this.subreddit,
@@ -39,7 +41,7 @@ class PostItem {
       margin:
           const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
       child: Column(children: <Widget>[
-        getPostHeader(context, subredditPrefixed, author),
+        getPostHeader(context, subredditPrefixed, author, created: created),
         Column(children: <Widget>[
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10.0),

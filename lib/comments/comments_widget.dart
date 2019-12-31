@@ -31,6 +31,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   String _text;
   String _subredditPrefixed;
   String _url;
+  num _created;
   List<Comment> _baseComments;
   bool loading = true;
   SubredditInfo _subredditInfo;
@@ -83,7 +84,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      getPostHeader(context, _subredditPrefixed, _author),
+                      getPostHeader(context, _subredditPrefixed, _author,
+                          created: _created),
                       if (_subredditPrefixed != null) SizedBox(height: 10.0),
                       if (_title != null)
                         Text(_title, style: Theme.of(context).textTheme.title),
@@ -191,6 +193,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
           _title = postInfo['title'];
           _text = postInfo['selftext'];
           _url = postInfo['url'];
+          _created = postInfo['created_utc'];
           _subredditPrefixed = postInfo['subreddit_name_prefixed'];
           if (_text == '') _text = null;
           _baseComments = _parseReplies(data[1]);
