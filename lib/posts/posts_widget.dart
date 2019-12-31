@@ -105,19 +105,23 @@ class _RedditPageState extends State<RedditPage> {
     return completer.future;
   }
 
-  _updateSubreddit(String subreddit) async {
-    _refreshPosts(subreddit);
-    SubredditInfo.getSubredditInfo(_reddit, subreddit).then((subredditInfo) {
-      if (subredditInfo != null) {
-        setState(() {
-          _subredditInfo = subredditInfo;
-        });
-      } else {
-        setState(() {
-          _subredditInfo = SubredditInfo.all();
-        });
-      }
+  _updateSubredditInfo(SubredditInfo subredditInfo) {
+    setState(() {
+      _subredditInfo = subredditInfo;
     });
+    _refreshPosts(subredditInfo.name);
+  }
+
+  _updateSubreddit(String subreddit) async {
+    if (subreddit == 'all') {
+      _updateSubredditInfo(SubredditInfo.all());
+    } else {
+      SubredditInfo.getSubredditInfo(_reddit, subreddit).then((subredditInfo) {
+        if (subredditInfo != null) {
+          _updateSubredditInfo(subredditInfo);
+        }
+      });
+    }
   }
 
   @override

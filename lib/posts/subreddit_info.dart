@@ -18,12 +18,13 @@ class SubredditInfo {
     try {
       reddit.sub(subreddit).about().fetch().then((result) {
         var data = result['data'];
-        if (data != null) {
+        var title = data['title'];
+        if (data != null && title != null) {
           var bannerImg = data['banner_img'];
           var bannerBackgroundImage = data['banner_background_image'];
           var iconImg = data['icon_img'];
           return completer.complete(SubredditInfo(subreddit,
-              title: data['title'],
+              title: title,
               headerImg: bannerImg != null && bannerImg != ''
                   ? bannerImg
                   : bannerBackgroundImage != '' ? bannerBackgroundImage : null,
