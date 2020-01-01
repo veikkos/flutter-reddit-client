@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_reddit_app/util/awardings.dart';
 import 'package:flutter_reddit_app/util/formatter.dart';
-import 'package:flutter_reddit_app/util/util.dart';
 
 class Comment {
   Comment(this._text, this._author, this._flair, this._score, this._op,
@@ -12,7 +12,7 @@ class Comment {
   final String _flair;
   final int _score;
   final bool _op;
-  List<Awardings> _awardings;
+  Awardings _awardings;
   List<Comment> replies = List<Comment>();
 
   _makeComment(BuildContext context) {
@@ -52,10 +52,10 @@ class Comment {
                       .body2
                       .apply(color: Colors.black38)),
             ),
-            getAwardings(_awardings)
+            _awardings.renderable(),
           ]),
           SizedBox(height: 2.0),
-          getMarkdownText(_text),
+          Formatter.renderMarkdownBody(_text),
         ]);
   }
 

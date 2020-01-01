@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_reddit_app/comments/comments_widget.dart';
 import 'package:flutter_reddit_app/posts/post_item.dart';
 import 'package:flutter_reddit_app/posts/subreddit_info.dart';
+import 'package:flutter_reddit_app/util/header.dart';
+import 'package:flutter_reddit_app/util/post_header.dart';
 import 'package:flutter_reddit_app/util/util.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:reddit/reddit.dart';
@@ -54,21 +56,14 @@ class _RedditPageState extends State<RedditPage> {
             _items = data['children'].map<PostItem>((d) {
               var data = d['data'];
               return PostItem(
-                  data['created_utc'],
                   data['id'],
                   data['title'],
                   data['subreddit'],
-                  data['subreddit_name_prefixed'],
-                  data['author'],
-                  data['score'],
-                  data['num_comments'],
-                  data['likes'],
+                  Header.parse(data),
+                  PostFooter.parse(data),
                   data['thumbnail'].toString().contains('http')
                       ? data['thumbnail']
-                      : null,
-                  data['locked'],
-                  data['stickied'],
-                  parseAwardings(data['all_awardings']));
+                      : null);
             }).toList();
           }
         });
@@ -200,7 +195,6 @@ class _RedditPageState extends State<RedditPage> {
                                       _subredditInfo.name.toLowerCase()
                                   ? _subredditInfo
                                   : SubredditInfo(item.subreddit),
-                              item.author,
                               item.id);
                         }),
                       );

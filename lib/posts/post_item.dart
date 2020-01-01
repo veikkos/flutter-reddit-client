@@ -1,47 +1,26 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_reddit_app/util/formatter.dart';
-import 'package:flutter_reddit_app/util/util.dart';
+import 'package:flutter_reddit_app/util/header.dart';
+import 'package:flutter_reddit_app/util/post_header.dart';
 import 'package:html_unescape/html_unescape_small.dart';
 
 class PostItem {
-  final num created;
   final String id;
   final String title;
   final String subreddit;
-  final String subredditPrefixed;
-  final String author;
-  final int score;
-  final int comments;
-  final String url;
+  final Header _header;
+  final PostFooter postFooter;
   final String thumbnailUrl;
-  final bool locked;
-  final bool stickied;
-  final List<Awardings> awardings;
 
-  PostItem(
-      this.created,
-      this.id,
-      this.title,
-      this.subreddit,
-      this.subredditPrefixed,
-      this.author,
-      this.score,
-      this.comments,
-      this.url,
-      this.thumbnailUrl,
-      this.locked,
-      this.stickied,
-      this.awardings);
+  PostItem(this.id, this.title, this.subreddit, this._header, this.postFooter,
+      this.thumbnailUrl);
 
   renderable(BuildContext context) {
     return Container(
       margin:
           const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
       child: Column(children: <Widget>[
-        getPostHeader(context, subredditPrefixed, author, created: created),
+        _header.renderable(context),
         Column(children: <Widget>[
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10.0),
@@ -61,50 +40,7 @@ class PostItem {
                   ),
                 ]),
           ),
-          Row(children: <Widget>[
-            Container(
-                child: Row(children: <Widget>[
-              if (stickied)
-                Icon(
-                  Icons.bookmark,
-                  color: Colors.lightGreen,
-                ),
-              if (stickied) SizedBox(width: 6),
-              if (locked)
-                Icon(
-                  Icons.lock_outline,
-                  color: Colors.yellow[600],
-                ),
-              if (locked) SizedBox(width: 2),
-              Transform.rotate(
-                angle: -pi / 2,
-                child: Icon(
-                  Icons.forward,
-                  color: Colors.red,
-                ),
-              ),
-              SizedBox(width: 1),
-              Text(
-                Formatter.uiCount(score),
-                style: Theme.of(context).textTheme.caption,
-              ),
-            ])),
-            SizedBox(width: 10),
-            Container(
-              child: Row(children: <Widget>[
-                Icon(
-                  Icons.comment,
-                  color: Colors.grey,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  Formatter.uiCount(comments),
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ]),
-            ),
-            getAwardings(awardings),
-          ]),
+          postFooter.renderable(context),
         ])
       ]),
     );

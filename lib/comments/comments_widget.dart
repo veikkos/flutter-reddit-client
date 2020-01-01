@@ -3,35 +3,36 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_reddit_app/comments/comment_item.dart';
 import 'package:flutter_reddit_app/posts/subreddit_info.dart';
+import 'package:flutter_reddit_app/util/awardings.dart';
+import 'package:flutter_reddit_app/util/formatter.dart';
+import 'package:flutter_reddit_app/util/header.dart';
+import 'package:flutter_reddit_app/util/post_header.dart';
 import 'package:flutter_reddit_app/util/util.dart';
 import 'package:reddit/reddit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommentsWidget extends StatefulWidget {
-  CommentsWidget(this._reddit, this._subredditInfo, this._author, this._id);
+  CommentsWidget(this._reddit, this._subredditInfo, this._id);
 
   final Reddit _reddit;
   final SubredditInfo _subredditInfo;
-  final String _author;
   final String _id;
 
   @override
   _CommentsWidgetState createState() =>
-      _CommentsWidgetState(_reddit, _subredditInfo, _author, _id);
+      _CommentsWidgetState(_reddit, _subredditInfo, _id);
 }
 
 class _CommentsWidgetState extends State<CommentsWidget> {
-  _CommentsWidgetState(
-      this._reddit, this._subredditInfo, this._author, this._id);
+  _CommentsWidgetState(this._reddit, this._subredditInfo, this._id);
 
   final Reddit _reddit;
-  final String _author;
   final String _id;
   String _title;
   String _text;
-  String _subredditPrefixed;
   String _url;
-  num _created;
+  Header _header;
+  PostFooter _postFooter;
   List<Comment> _baseComments;
   bool loading = true;
   SubredditInfo _subredditInfo;
@@ -84,18 +85,21 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      getPostHeader(context, _subredditPrefixed, _author,
-                          created: _created),
-                      if (_subredditPrefixed != null) SizedBox(height: 10.0),
+                      _header.renderable(context),
+                      SizedBox(height: 10.0),
                       if (_title != null)
                         Text(_title, style: Theme.of(context).textTheme.title),
                       if (_text != null || _url != null) SizedBox(height: 10.0),
-                      if (_text != null) getMarkdownText(_text),
+                      if (_text != null) Formatter.renderMarkdownBody(_text),
                       if (_url != null)
                         SizedBox(
-                          height: 5.0,
+                          height: 10.0,
                         ),
                       if (_url != null) _getContent(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      _postFooter.renderable(context),
                       Divider(
                         thickness: 2.0,
                       ),
@@ -168,7 +172,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     data['author_flair_text'],
                     data['score_hidden'] ? null : data['score'],
                     data['is_submitter'],
-                    parseAwardings(data['all_awardings']));
+                    Awardings.parse(data['all_awardings']));
                 var replies = data['replies'];
                 if (replies != null) {
                   comment.replies = _parseReplies(replies);
@@ -190,11 +194,11 @@ class _CommentsWidgetState extends State<CommentsWidget> {
           loading = false;
           var data = result['data'];
           var postInfo = _parsePostInfo(data[0]);
+          _header = Header.parse(postInfo);
+          _postFooter = PostFooter.parse(postInfo);
           _title = postInfo['title'];
           _text = postInfo['selftext'];
           _url = postInfo['url'];
-          _created = postInfo['created_utc'];
-          _subredditPrefixed = postInfo['subreddit_name_prefixed'];
           if (_text == '') _text = null;
           _baseComments = _parseReplies(data[1]);
         });

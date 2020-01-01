@@ -1,38 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:html_unescape/html_unescape_small.dart';
-import 'package:timeago/timeago.dart' as timeAgo;
-
-getMarkdownText(String text) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      Flexible(child: MarkdownBody(data: HtmlUnescape().convert(text))),
-    ],
-  );
-}
-
-getPostHeader(BuildContext context, String subredditPrefixed, String user,
-    {num created}) {
-  String time = timeAgo.format(
-      DateTime.fromMillisecondsSinceEpoch(created.toInt() * 1000, isUtc: true));
-  return Row(children: <Widget>[
-    Text(
-      subredditPrefixed,
-      style: Theme.of(context).textTheme.body2,
-    ),
-    SizedBox(width: 10),
-    Flexible(
-      child: Text(
-        'By u/$user $time',
-        style: Theme.of(context).textTheme.body1.apply(
-              color: Colors.black54,
-            ),
-      ),
-    ),
-  ]);
-}
 
 getSubredditAppBar(
     String title, String subreddit, String icon, String headerImg) {
@@ -65,36 +31,4 @@ getSubredditAppBar(
                 : null)
         : null,
   );
-}
-
-class Awardings {
-  Awardings(this.count, this.icon);
-
-  num count;
-  String icon;
-}
-
-getAwardings(List<Awardings> awardings) {
-  return Flexible(
-    child: Wrap(
-      children: awardings
-          .where((awardings) => awardings.count > 0)
-          .map<Widget>(
-            (awardings) => Row(mainAxisSize: MainAxisSize.min, children: [
-              SizedBox(width: 7),
-              Image.network(
-                awardings.icon,
-                width: 20,
-              ),
-            ]),
-          )
-          .toList(),
-    ),
-  );
-}
-
-parseAwardings(var data) {
-  return data
-      .map<Awardings>((item) => Awardings(item['count'], item['icon_url']))
-      .toList();
 }
