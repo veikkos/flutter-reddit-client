@@ -5,14 +5,15 @@ import 'package:flutter_reddit_app/util/formatter.dart';
 
 class Comment {
   Comment(this._text, this._author, this._flair, this._score, this._op,
-      this._awardings);
+      this._awardings, this.distinguished);
 
   final String _text;
   final String _author;
   final String _flair;
   final int _score;
   final bool _op;
-  Awardings _awardings;
+  final Awardings _awardings;
+  final bool distinguished;
   List<Comment> replies = List<Comment>();
 
   _makeComment(BuildContext context) {
@@ -24,9 +25,11 @@ class Comment {
               Flexible(
                 child: Text(_author,
                     style: Theme.of(context).textTheme.body2.apply(
-                          color: _op
-                              ? Theme.of(context).primaryColorDark
-                              : Theme.of(context).primaryColor,
+                          color: distinguished
+                              ? Colors.green
+                              : _op
+                                  ? Theme.of(context).primaryColorDark
+                                  : Theme.of(context).primaryColor,
                         )),
               ),
               SizedBox(width: 7.0),

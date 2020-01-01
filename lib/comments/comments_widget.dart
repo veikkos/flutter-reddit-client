@@ -172,7 +172,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     data['author_flair_text'],
                     data['score_hidden'] ? null : data['score'],
                     data['is_submitter'],
-                    Awardings.parse(data['all_awardings']));
+                    Awardings.parse(data['all_awardings']),
+                    data['distinguished'] != null);
                 var replies = data['replies'];
                 if (replies != null) {
                   comment.replies = _parseReplies(replies);
