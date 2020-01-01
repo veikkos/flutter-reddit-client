@@ -1,6 +1,9 @@
-# Passive Reddit client with Flutter
+# Reddit client with Flutter
 
-Simple passive Reddit client built for education purposes. Unofficial!
+Simple no-login Reddit lurking client built for education
+purposes. Unofficial!
+
+![Passive Reddit on Android](https://github.com/veikkos/flutter-reddit-client/blob/master/media/passive-reddit.gif)
 
 ## Getting Started
 
