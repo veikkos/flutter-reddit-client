@@ -12,11 +12,14 @@ class Awardings {
 
   List<Awarding> _awardings;
 
+  getAwardings() {
+    return _awardings.where((awardings) => awardings.count > 0);
+  }
+
   renderable() {
     return Flexible(
       child: Wrap(
-        children: _awardings
-            .where((awardings) => awardings.count > 0)
+        children: getAwardings()
             .map<Widget>(
               (awardings) => Row(mainAxisSize: MainAxisSize.min, children: [
                 SizedBox(width: 7),

@@ -19,41 +19,43 @@ class Comment {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            Flexible(
-              child: Text(_author,
-                  style: Theme.of(context).textTheme.body2.apply(
-                        color: _op
-                            ? Theme.of(context).primaryColorDark
-                            : Theme.of(context).primaryColor,
-                      )),
-            ),
-            SizedBox(width: 7.0),
-            if (_flair != null && _flair != '')
+          Container(
+            child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
               Flexible(
-                child: Container(
-                  color: Colors.black54,
-                  padding: const EdgeInsets.all(1.0),
-                  child: Text(_flair,
-                      style: Theme.of(context)
-                          .textTheme
-                          .body2
-                          .apply(color: Colors.white)),
-                ),
+                child: Text(_author,
+                    style: Theme.of(context).textTheme.body2.apply(
+                          color: _op
+                              ? Theme.of(context).primaryColorDark
+                              : Theme.of(context).primaryColor,
+                        )),
               ),
-            if (_flair != null && _flair != '') SizedBox(width: 7.0),
-            Flexible(
-              child: Text(
-                  _score != null
-                      ? Formatter.uiCount(_score) + ' points'
-                      : 'Score hidden',
-                  style: Theme.of(context)
-                      .textTheme
-                      .body2
-                      .apply(color: Colors.black38)),
-            ),
-            _awardings.renderable(),
-          ]),
+              SizedBox(width: 7.0),
+              if (_flair != null && _flair != '')
+                Flexible(
+                  child: Container(
+                    color: Colors.black54,
+                    padding: const EdgeInsets.all(1.0),
+                    child: Text(_flair,
+                        style: Theme.of(context)
+                            .textTheme
+                            .body2
+                            .apply(color: Colors.white)),
+                  ),
+                ),
+              if (_flair != null && _flair != '') SizedBox(width: 7.0),
+              Flexible(
+                child: Text(
+                    _score != null
+                        ? Formatter.uiCount(_score) + ' points'
+                        : 'Score hidden',
+                    style: Theme.of(context)
+                        .textTheme
+                        .body2
+                        .apply(color: Colors.black38)),
+              ),
+              if (_awardings.getAwardings().length > 0) _awardings.renderable(),
+            ]),
+          ),
           SizedBox(height: 2.0),
           Formatter.renderMarkdownBody(_text),
         ]);
